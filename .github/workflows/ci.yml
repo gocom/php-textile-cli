@@ -31,8 +31,7 @@ jobs:
           name: textile.phar
           path: ${{ github.workspace }}/build/textile.phar
 
-# TODO setup SonarCloud project
-#      - name: SonarQube Scan
-#        uses: SonarSource/sonarqube-scan-action@v5
-#        env:
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
