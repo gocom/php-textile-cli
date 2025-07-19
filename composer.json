@@ -1,0 +1,58 @@
+{
+    "name": "rah/php-textile-cli",
+    "description": "CLI for converting Textile markup to HTML",
+    "keywords": ["textile", "markup", "parser", "compiler", "cli", "html"],
+    "homepage": "https://github.com/gocom/php-textile-cli",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Jukka Svahn",
+            "homepage": "https://github.com/gocom",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/gocom/php-textile-cli/issues",
+        "source": "https://github.com/gocom/php-textile-cli"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rah\\TextileCli\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rah\\TextileCli\\Test\\": "test/"
+        }
+    },
+    "bin": [
+        "bin/mtxpc"
+    ],
+    "require": {
+        "php": ">=8.1.0",
+        "netcarver/textile": "^4.1.3",
+        "symfony/console": "^7.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5.20",
+        "squizlabs/php_codesniffer": "3.*",
+        "phpstan/phpstan": "^1.12.11",
+        "psy/psysh": "^0.12.4"
+    },
+    "scripts": {
+        "test": [
+            "@composer lint",
+            "@composer test:static",
+            "@composer test:unit",
+            "@composer test:integration"
+        ],
+        "lint": "phpcs",
+        "lint-fix": "phpcbf",
+        "repl": "psysh",
+        "test:integration": "phpunit -c phpunit-integration.xml",
+        "test:static": "phpstan analyse --level 8 src test/Integration test/Unit",
+        "test:unit": "XDEBUG_MODE=coverage phpunit",
+        "compile": "@php -dphar.readonly=0 bin/compile && chmod +x build/textile.phar"
+    }
+}

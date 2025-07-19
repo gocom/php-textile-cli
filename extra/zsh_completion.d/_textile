@@ -1,0 +1,80 @@
+#compdef textile
+
+# PHP-Textile CLI
+# https://github.com/gocom/php-textile-cli
+#
+# Copyright (C) 2025 Jukka Svahn
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+local curcontext=$curcontext state document_types link_relationships urls
+
+document_types=(
+    'html5: Output HTML5 document'
+    'xhtml: Output XHTML document'
+)
+
+link_relationships=(
+    'nofollow: Add rel nofollow to links'
+    'noreferrer: Add rel noreferrer to links'
+)
+
+urls=(
+    'http://'
+    'https://'
+)
+
+_arguments -A '-*' \
+    '(- *)'{-h,--help}'[Print help]: :->noargs' \
+    '(-V --version)'{-V,--version}'[Print version]: :->noargs' \
+    '(--document-type=)--document-type=[Document type]: :->document_types' \
+    '(--document-root-directory=)--document-root-directory=[Set document root directory]: :_directories' \
+    '(--lite)--lite[Enable lite mode]' \
+    '(--disable-images)--disable-images[Disable images]' \
+    '(--link-relationship=)--link-relationship=[Set link relationship]: :->link_relationships' \
+    '(--restricted)--restricted[Enable restricted mode]' \
+    '(--raw-blocks)--raw-blocks[Enable raw HTML blocks]' \
+    '(--align-classes)--align-classes[Enable alignment classes]' \
+    '(--disable-align-classes)--disable-align-classes[Disable alignment classes]' \
+    '(--disable-block-tags)--disable-block-tags[Disable block tags]' \
+    '(--disable-line-wrap)--disable-line-wrap[Disable line wrapping]' \
+    '(--image-prefix=)--image-prefix=[Set image URL prefix]: :->urls' \
+    '(--link-prefix)--link-prefix=[Set link URL prefix]: :->urls' \
+    '(--disable-dimensions)--disable-dimensions[Disable adding width and height to images]' \
+    '(-o --output=)'{-o,--output=}'[Save HTML file as]: :_files' \
+    :INPUT:_files
+
+if [[ CURRENT -ge 1 ]]; then
+    case $state in
+        document_types)
+            _describe -t commands "Document types" document_types
+            ;;
+        link_relationships)
+            _describe -t commands "Link relationships" link_relationships
+            ;;
+        noargs)
+            _message "Nothing to complete"
+            ;;
+        urls)
+            _describe -t commands "URL" urls
+            ;;
+    esac
+
+    return
+fi

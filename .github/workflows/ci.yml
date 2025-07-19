@@ -1,0 +1,38 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      COMPOSER_HOME: ./.composer
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Test
+        run: make test
+
+      - name: Process test reports
+        run: make process-reports
+
+      - name: Build Phar
+        run: make compile
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: textile.phar
+          path: ${{ github.workspace }}/build/textile.phar
+
+# TODO setup SonarCloud project
+#      - name: SonarQube Scan
+#        uses: SonarSource/sonarqube-scan-action@v5
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

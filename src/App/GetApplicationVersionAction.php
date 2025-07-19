@@ -1,0 +1,68 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * PHP-Textile CLI
+ * https://github.com/gocom/php-textile-cli
+ *
+ * Copyright (C) 2025 Jukka Svahn
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+namespace Rah\TextileCli\App;
+
+use Rah\TextileCli\Api\App\GetApplicationVersionActionInterface;
+
+/**
+ * Get application version action.
+ */
+class GetApplicationVersionAction implements GetApplicationVersionActionInterface
+{
+    private const DEFAULT_VERSION = 'dev';
+
+    /**
+     * {@inheritDoc}
+     */
+    public function execute(): string
+    {
+        $packageComposer = \dirname(__DIR__, 2) . '/composer.json';
+
+        if (\file_exists($packageComposer)) {
+            $composer = \file_get_contents($packageComposer);
+        }
+
+        if (!empty($composer)) {
+            $json = \json_decode($composer, true);
+
+            if (is_array($json) && isset($json['version'])) {
+                return $json['version'];
+            }
+        }
+
+        $timestamp = \filemtime(__FILE__);
+
+        if ($timestamp) {
+            return \sprintf('Modified at %s', \date('D, d M Y H:i:sP', $timestamp));
+        }
+
+        return self::DEFAULT_VERSION;
+    }
+}

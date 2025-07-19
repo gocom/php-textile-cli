@@ -1,0 +1,8 @@
+.*
+!.editorconfig
+!.github
+!.gitignore
+/build/
+/dist/
+/vendor/
+/composer.lock
