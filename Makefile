@@ -8,7 +8,8 @@ PHP = docker compose run --rm -u $(HOST_UID):$(HOST_GID) php
 all: test
 
 dist: build-man compile
-	$(PHP) bash -c 'rm -rf dist && mkdir -p dist/extra && cp LICENSE dist/ && cp -r build/man dist/man && mv build/textile.phar dist && cp -r extra/* dist/extra && cd dist && zip -r ../dist/textile.zip .'
+	$(PHP) bash -c 'rm -rf dist && mkdir -p dist/extra && cp LICENSE dist/ && cp -r build/man dist/man && mv build/textile.phar dist && cp -r extra/* dist/extra && cd dist && zip -r ../dist/php-textile-cli.zip .'
+	@echo "Created dist/php-textile-cli.zip"
 
 docker-build:
 	docker-compose build php
@@ -37,8 +38,9 @@ test-static: vendor
 repl: vendor
 	$(PHP) composer repl
 
-compile: vendor
-	$(PHP) composer compile
+compile:
+	$(PHP) bash -c 'composer install --no-dev && composer compile && composer install && build/textile.phar --version'
+	@echo "Built build/textile.phar"
 
 shell:
 	$(PHP) bash

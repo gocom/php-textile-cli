@@ -64,39 +64,20 @@ __HALT_COMPILER();
 
 EOF;
 
-$autoload = <<<'EOF'
-<?php
-
-require __DIR__ . '/composer/ClassLoader.php';
-
-$loader = new \Composer\Autoload\ClassLoader();
-
-$loader->addPsr4('Rah\\TextileCli\\', \dirname(__DIR__) . '/src');
-
-$loader->register();
-
-EOF;
-
 $bin = \preg_replace(
     '@^#!/usr/bin/env php\s+@',
     '',
     \file_get_contents($root . '/bin/textile')
 );
 
-$classLoader = \file_get_contents($root . '/vendor/composer/ClassLoader.php');
-
 $phar = new \Phar($file, 0, 'textile.phar');
 
 $phar->setSignatureAlgorithm(\Phar::SHA1);
 
-$phar->buildFromDirectory($root, '#^'.\preg_quote($root, '#').'/(src)#');
-
-$phar->addFromString('/vendor/composer/ClassLoader.php', $classLoader);
-
-$phar->addFromString('/vendor/autoload.php', $autoload);
+$phar->buildFromDirectory($root, '#^'.\preg_quote($root, '#').'/(src/|vendor/)#');
 
 $phar->addFromString('/bin/textile', $bin);
 
-$phar->setStub($stub);
+$phar->addFromString('VERSION', \getenv('VERSION') ?: 'dev');
 
-\fwrite(\STDOUT, 'Built build/textile.phar');
+$phar->setStub($stub);

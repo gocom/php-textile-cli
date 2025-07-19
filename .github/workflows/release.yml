@@ -17,8 +17,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Get version
+        id: version
+        run: |
+          echo "contents<<VERSIONEOF" >> $GITHUB_OUTPUT
+          echo "$GITHUB_REF" | cut -d / -f 3 >> $GITHUB_OUTPUT
+          echo "VERSIONEOF" >> $GITHUB_OUTPUT
+
       - name: Package
-        run: make dist
+        run: make dist VERSION=${{ steps.version.outputs.contents }}
 
       - name: Changelog
         id: changelog
@@ -37,6 +44,6 @@ jobs:
         uses: shogo82148/actions-upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ github.workspace }}/dist/textile.zip
+          asset_path: ${{ github.workspace }}/dist/php-textile-cli.zip
           asset_name: textile.zip
           asset_content_type: application/zip

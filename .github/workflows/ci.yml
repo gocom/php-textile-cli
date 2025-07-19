@@ -16,25 +16,29 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Get version
+        id: version
+        run: |
+          echo "contents<<VERSIONEOF" >> $GITHUB_OUTPUT
+          echo "$GITHUB_REF" | cut -d / -f 3 >> $GITHUB_OUTPUT
+          echo "VERSIONEOF" >> $GITHUB_OUTPUT
+
       - name: Test
         run: make test
 
       - name: Process test reports
         run: make process-reports
 
-      - name: Build Phar
-        run: make compile
-
-      - name: Build manpage
-        run: make build-man
+      - name: Package
+        run: |
+          make dist VERSION=${{ steps.version.outputs.contents }}
+          rm -f dist/php-textile-cli.zip
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: artifact
-          path: |
-            build/textile.phar
-            build/man/
+          name: dist
+          path: dist/
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5

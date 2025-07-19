@@ -29,6 +29,12 @@ declare(strict_types=1);
 
 namespace Rah\TextileCli;
 
+\set_error_handler(static function ($errno, $errstr, $errfile, $errline) {
+    \fwrite(\STDERR, "$errno: $errstr in $errfile on line $errline\n");
+
+    exit(1);
+});
+
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 use Rah\TextileCli\App\GetApplicationVersionAction;
