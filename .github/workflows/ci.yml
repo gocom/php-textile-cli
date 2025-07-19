@@ -25,11 +25,16 @@ jobs:
       - name: Build Phar
         run: make compile
 
+      - name: Build manpage
+        run: make build-man
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: textile.phar
-          path: ${{ github.workspace }}/build/textile.phar
+          name: artifact
+          path: |
+            build/textile.phar
+            build/man/
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5

@@ -1,4 +1,4 @@
-.PHONY: all docker-build lint lint-fix test test-integration test-unit test-static repl process-reports compile clean help
+.PHONY: all dist docker-build lint lint-fix test test-integration test-unit test-static repl process-reports compile clean help
 
 HOST_UID ?= `id -u`
 HOST_GID ?= `id -g`
@@ -6,6 +6,9 @@ IMAGE ?= latest
 PHP = docker compose run --rm -u $(HOST_UID):$(HOST_GID) php
 
 all: test
+
+dist: build-man compile
+	$(PHP) bash -c 'rm -rf dist && mkdir -p dist/extra && cp LICENSE dist/ && cp -r build/man dist/man && mv build/textile.phar dist && cp -r extra/* dist/extra && cd dist && zip -r ../dist/textile.zip .'
 
 docker-build:
 	docker-compose build php
@@ -41,7 +44,7 @@ shell:
 	$(PHP) bash
 
 clean:
-	$(PHP) rm -rf build composer.lock .phpunit.result.cache vendor .test-result
+	$(PHP) rm -rf build composer.lock dist .phpunit.result.cache vendor .test-result
 
 build-man:
 	$(PHP) bash -c 'mkdir -p build/man/man1/ && pandoc -s -f markdown -t man -o build/man/man1/textile.1 man/man1/textile.1.md'

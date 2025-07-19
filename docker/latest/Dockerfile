@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
     man \
     pandoc \
     unzip \
+    zip \
     zlib1g-dev \
     zsh \
     && groupadd -g "$APP_GID" "$APP_GROUP" \
