@@ -23,14 +23,14 @@ Usage
 -----
 
 ```shell
-$ vendor/bin/textile [[-h|--help][-c|--compress][--outdir=<path>]] <file>
+$ vendor/bin/textile [options] <file>
 ```
 
 Examples:
 
 ```shell
 $ echo "h1. Textile markup" | vendor/bin/textile
-$ vendor/bin/textile --o path/to/README.html path/to/README.textile
+$ vendor/bin/textile -o path/to/README.html path/to/README.textile
 ```
 
 Development
