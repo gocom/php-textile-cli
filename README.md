@@ -25,21 +25,21 @@ Usage
 
 ```shell
 $ textile [
-  [--document-type <type>]
-  [--document-root-directory <directory>]
+  [-t|--document-type <type>]
+  [-d|--document-root-directory <directory>]
   [-l|--lite]
-  [--no-images]
-  [--link-relationship <rel>]
+  [-i|--no-images]
+  [-L|--link-relationship <rel>]
   [-r|--restricted]
-  [--raw-blocks]
-  [--align-classes]
-  [--no-align-classes]
-  [--no-block-tags]
-  [--no-line-wrap]
-  [--image-prefix <url>]
-  [--link-prefix <url>]
-  [--no-dimensions]
-  [-o|--output <path>]
+  [-U|--raw-blocks]
+  [-A|--align-classes]
+  [-a|--no-align-classes]
+  [-b|--no-block-tags]
+  [-w|--no-line-wrap]
+  [-p|--image-prefix <url>]
+  [-P|--link-prefix <url>]
+  [-z|--no-dimensions]
+  [-o|--output <file>]
 ] [--] [<file>]
 ```
 
@@ -48,6 +48,7 @@ Examples:
 ```shell
 $ echo "h1. Textile markup" | vendor/bin/textile
 $ vendor/bin/textile -o path/to/README.html path/to/README.textile
+$ vendor/bin/textile --help
 ```
 
 Development
