@@ -29,6 +29,12 @@ declare(strict_types=1);
 
 namespace Rah\TextileCli;
 
+use Rah\TextileCli\App\GetApplicationVersionAction;
+use Rah\TextileCli\Command\Textile;
+use Symfony\Component\Console\Application;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
 \set_error_handler(static function (int $severity, string $message, string $filename, int $line) {
     throw new \ErrorException(
         $message,
@@ -39,12 +45,6 @@ namespace Rah\TextileCli;
     );
 });
 
-require dirname(__DIR__) . '/vendor/autoload.php';
-
-use Rah\TextileCli\App\GetApplicationVersionAction;
-use Rah\TextileCli\Command\Parse;
-use Symfony\Component\Console\Application;
-
 $version = new GetApplicationVersionAction();
 
 $application = new Application(
@@ -52,8 +52,8 @@ $application = new Application(
     $version->execute()
 );
 
-$application->add(new Parse());
+$application->add(new Textile());
 
-$application->setDefaultCommand('parse', true);
+$application->setDefaultCommand('textile', true);
 
 $application->run();

@@ -32,16 +32,16 @@ namespace Rah\TextileCli\Test\Unit\Command;
 use ErrorException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Rah\TextileCli\Command\Parse;
+use Rah\TextileCli\Command\Textile;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\StreamableInputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class ParseTest extends TestCase
+final class TextileTest extends TestCase
 {
-    private Parse $command;
+    private Textile $command;
 
     /**
      * @var MockObject&InputInterface
@@ -63,7 +63,7 @@ final class ParseTest extends TestCase
             ->getMockBuilder(OutputInterface::class)
             ->getMock();
 
-        $this->command = new Parse();
+        $this->command = new Textile();
     }
 
     public function testExecute(): void

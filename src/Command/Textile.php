@@ -44,7 +44,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * Compiles Textile documents into HTML.
  */
-class Parse extends Command
+final class Textile extends Command
 {
     /**
      * {@inheritdoc}
@@ -52,11 +52,11 @@ class Parse extends Command
     protected function configure(): void
     {
         $this
-            ->setName('parse')
+            ->setName('textile')
             ->setDefinition([
                 new InputOption(
                     'document-type',
-                    null,
+                    't',
                     InputOption::VALUE_REQUIRED,
                     'Set the document type',
                     Parser::DOCTYPE_HTML5,
@@ -68,7 +68,7 @@ class Parse extends Command
 
                 new InputOption(
                     'document-root-directory',
-                    null,
+                    'd',
                     InputOption::VALUE_REQUIRED,
                     'Set the document root directory',
                     ''
@@ -76,21 +76,21 @@ class Parse extends Command
 
                 new InputOption(
                     'lite',
-                    null,
+                    'l',
                     InputOption::VALUE_NONE,
                     'Enable lite mode'
                 ),
 
                 new InputOption(
-                    'disable-images',
-                    null,
+                    'no-images',
+                    'i',
                     InputOption::VALUE_NONE,
                     'Disable images'
                 ),
 
                 new InputOption(
                     'link-relationship',
-                    null,
+                    'L',
                     InputOption::VALUE_REQUIRED,
                     'Set link relationship',
                     null,
@@ -99,63 +99,63 @@ class Parse extends Command
 
                 new InputOption(
                     'restricted',
-                    ['r'],
+                    'r',
                     InputOption::VALUE_NONE,
                     'Enable restricted mode'
                 ),
 
                 new InputOption(
                     'raw-blocks',
-                    null,
+                    'U',
                     InputOption::VALUE_NONE,
                     'Enable raw HTML blocks'
                 ),
 
                 new InputOption(
                     'align-classes',
-                    null,
+                    'A',
                     InputOption::VALUE_NONE,
                     'Enable alignment classes'
                 ),
 
                 new InputOption(
-                    'disable-align-classes',
-                    null,
+                    'no-align-classes',
+                    'a',
                     InputOption::VALUE_NONE,
                     'Disable alignment classes'
                 ),
 
                 new InputOption(
-                    'disable-block-tags',
-                    null,
+                    'no-block-tags',
+                    'b',
                     InputOption::VALUE_NONE,
                     'Disable block tags'
                 ),
 
                 new InputOption(
-                    'disable-line-wrap',
-                    null,
+                    'no-line-wrap',
+                    'w',
                     InputOption::VALUE_NONE,
                     'Disable line wrapping'
                 ),
 
                 new InputOption(
                     'image-prefix',
-                    null,
+                    'p',
                     InputOption::VALUE_REQUIRED,
                     'Set image URL prefix'
                 ),
 
                 new InputOption(
                     'link-prefix',
-                    null,
+                    'P',
                     InputOption::VALUE_REQUIRED,
                     'Set link URL prefix'
                 ),
 
                 new InputOption(
-                    'disable-dimensions',
-                    null,
+                    'no-dimensions',
+                    'z',
                     InputOption::VALUE_NONE,
                     'Disable adding width and height to images'
                 ),
@@ -175,7 +175,9 @@ class Parse extends Command
             ])
             ->setDescription('Compile Textile markup to HTML')
             ->setHelp(<<<EOF
-Todo.
+CLI implementation of PHP-Textile, a modern Textile markup language parser for PHP. Textile is a humane web
+text generator that takes lightweight, readable, plaintext-like markup language and converts it into well-formed
+HTML.
 EOF
             );
     }
@@ -222,15 +224,15 @@ EOF
         $textile
             ->setDocumentType($input->getOption('document-type') ?? Parser::DOCTYPE_HTML5)
             ->setLite((bool) $input->getOption('lite'))
-            ->setImages(!$input->getOption('disable-images'))
+            ->setImages(!$input->getOption('no-images'))
             ->setLinkRelationShip((string) $input->getOption('link-relationship'))
             ->setRestricted((bool) $input->getOption('restricted'))
             ->setRawBlocks((bool) $input->getOption('raw-blocks'))
-            ->setBlockTags(!$input->getOption('disable-block-tags'))
-            ->setLineWrap(!$input->getOption('disable-line-wrap'))
+            ->setBlockTags(!$input->getOption('no-block-tags'))
+            ->setLineWrap(!$input->getOption('no-line-wrap'))
             ->setImagePrefix((string) $input->getOption('image-prefix'))
             ->setLinkPrefix((string) $input->getOption('link-prefix'))
-            ->setDimensionlessImages((bool) $input->getOption('disable-dimensions'));
+            ->setDimensionlessImages((bool) $input->getOption('no-dimensions'));
 
         if ($input->getOption('document-root-directory')) {
             $textile->setDocumentRootDirectory($input->getOption('document-root-directory'));
@@ -240,7 +242,7 @@ EOF
             $textile->setAlignClasses(true);
         }
 
-        if ($input->getOption('disable-align-classes')) {
+        if ($input->getOption('no-align-classes')) {
             $textile->setAlignClasses(false);
         }
 

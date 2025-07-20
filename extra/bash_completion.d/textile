@@ -24,7 +24,7 @@
 # SOFTWARE.
 
 _textile () {
-    local cur prev words cword
+    local cur prev words cword options
 
     _init_completion || return
 
@@ -49,7 +49,32 @@ _textile () {
 
     case "$cur" in
         -*)
-            COMPREPLY=($(compgen -W '$( _parse_help "$1" | sed "s/=//" )' -- "$cur"))
+            options=(\
+                '-h --help' \
+                '-V --version' \
+                '-t --document-type' \
+                '-d --document-root-directory' \
+                '-l --lite' \
+                '-i --no-images' \
+                '-L --link-relationship' \
+                '-r --restricted' \
+                '-U --raw-blocks' \
+                '-A --align-classes' \
+                '-a --no-align-classes' \
+                '-b --no-block-tags' \
+                '-w --no-line-wrap' \
+                '-p --image-prefix' \
+                '-P --link-prefix' \
+                '-z --no-dimensions' \
+                '-o --output' \
+                '-q --quiet' \
+                '--ansi' \
+                '--no-ansi' \
+                '--no-interaction' \
+                '-v -vv -vvv --verbose' \
+            )
+
+            COMPREPLY=($(compgen -W "${options[*]}" -- "$cur"))
             return
             ;;
         *)

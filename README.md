@@ -5,8 +5,8 @@ PHP-Textile CLI
 
 **Work in progress, not yet installable.**
 
-CLI application for parsing Textile markup using [PHP-Textile](https://github.com/textile/php-textile) library. Written
-in PHP.
+CLI application for parsing Textile markup using [PHP-Textile](https://github.com/textile/php-textile) library, written
+in PHP. Accepts Textile markup input and converts it into well-formed HTML.
 
 Install
 -----
@@ -17,13 +17,30 @@ Using [Composer](https://getcomposer.org):
 $ composer require rah/php-textile-cli
 ```
 
-Or [download](https://github.com/gocom/php-textile-cli/releases/latest) a packaged textile.phar from releases.
+Or [download](https://github.com/gocom/php-textile-cli/releases/latest) a packaged textile.phar from the releases. The
+downloadable ZIP also contains man pages and shell completion definitions for bash, fish and zsh.
 
 Usage
 -----
 
 ```shell
-$ vendor/bin/textile [options] <file>
+$ textile [
+  [--document-type <type>]
+  [--document-root-directory <directory>]
+  [-l|--lite]
+  [--no-images]
+  [--link-relationship <rel>]
+  [-r|--restricted]
+  [--raw-blocks]
+  [--align-classes]
+  [--no-align-classes]
+  [--no-block-tags]
+  [--no-line-wrap]
+  [--image-prefix <url>]
+  [--link-prefix <url>]
+  [--no-dimensions]
+  [-o|--output <path>]
+] [--] [<file>]
 ```
 
 Examples:

@@ -34,7 +34,7 @@ use Rah\TextileCli\Api\Input\GetStdInActionInterface;
 /**
  * Get STDIN action.
  */
-class GetStdInAction implements GetStdInActionInterface
+final class GetStdInAction implements GetStdInActionInterface
 {
     /**
      * {@inheritdoc}

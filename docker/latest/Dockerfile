@@ -45,3 +45,4 @@ COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_ROOT_VERSION=dev-master
 ENV PATH=/app/bin:$PATH
+ENV MANPATH=/app/build/man:$MANPATH

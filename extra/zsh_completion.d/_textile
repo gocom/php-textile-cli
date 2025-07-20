@@ -43,21 +43,26 @@ urls=(
 _arguments -A '-*' \
     '(- *)'{-h,--help}'[Print help]: :->noargs' \
     '(-V --version)'{-V,--version}'[Print version]: :->noargs' \
-    '(--document-type=)--document-type=[Document type]: :->document_types' \
-    '(--document-root-directory=)--document-root-directory=[Set document root directory]: :_directories' \
-    '(--lite)--lite[Enable lite mode]' \
-    '(--disable-images)--disable-images[Disable images]' \
-    '(--link-relationship=)--link-relationship=[Set link relationship]: :->link_relationships' \
-    '(--restricted)--restricted[Enable restricted mode]' \
-    '(--raw-blocks)--raw-blocks[Enable raw HTML blocks]' \
-    '(--align-classes)--align-classes[Enable alignment classes]' \
-    '(--disable-align-classes)--disable-align-classes[Disable alignment classes]' \
-    '(--disable-block-tags)--disable-block-tags[Disable block tags]' \
-    '(--disable-line-wrap)--disable-line-wrap[Disable line wrapping]' \
-    '(--image-prefix=)--image-prefix=[Set image URL prefix]: :->urls' \
-    '(--link-prefix)--link-prefix=[Set link URL prefix]: :->urls' \
-    '(--disable-dimensions)--disable-dimensions[Disable adding width and height to images]' \
+    '(-t --document-type=)'{-t,--document-type=}'[Document type]: :->document_types' \
+    '(-d --document-root-directory=)'{-d,--document-root-directory=}'[Set document root directory]: :_directories' \
+    '(-l --lite)'{-l,--lite}'[Enable lite mode]' \
+    '(-i --no-images)'{-i,--no-images}'[Disable images]' \
+    '(-L --link-relationship=)'{-L,--link-relationship=}'[Set link relationship]: :->link_relationships' \
+    '(-r --restricted)'{-r,--restricted}'[Enable restricted mode]' \
+    '(-U --raw-blocks)'{-U,--raw-blocks}'[Enable raw HTML blocks]' \
+    '(-A --align-classes)'{-A,--align-classes}'[Enable alignment classes]' \
+    '(-a --no-align-classes)'{-a,--no-align-classes}'[Disable alignment classes]' \
+    '(-b --no-block-tags)'{-b,--no-block-tags}'[Disable block tags]' \
+    '(-w --no-line-wrap)'{-w,--no-line-wrap}'[Disable line wrapping]' \
+    '(-p --image-prefix=)'{-p,--image-prefix=}'[Set image URL prefix]: :->urls' \
+    '(-P --link-prefix)'{-P,--link-prefix=}'[Set link URL prefix]: :->urls' \
+    '(-z --no-dimensions)'{-z,--no-dimensions}'[Disable adding width and height to images]' \
     '(-o --output=)'{-o,--output=}'[Save HTML file as]: :_files' \
+    '(-q --quiet)'{-q,--quiet}'[Do not output any message]' \
+    '(--ansi)--ansi[Force enable ANSI output]' \
+    '(--no-ansi)--no-ansi[Disable ANSI output]' \
+    '(--no-interaction)--no-interaction[Do not ask any interactive question]' \
+    '(-v -vv -vvv --verbose)'{-v,-vv,-vvv,--verbose}'[Increase verbosity: 1 for verbose, 2 for more verbose and 3 for debug]' \
     :INPUT:_files
 
 if [[ CURRENT -ge 1 ]]; then
