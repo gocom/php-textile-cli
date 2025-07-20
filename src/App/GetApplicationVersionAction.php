@@ -33,8 +33,10 @@ use Rah\TextileCli\Api\App\GetApplicationVersionActionInterface;
 
 /**
  * Get application version action.
+ *
+ * @codeCoverageIgnore
  */
-class GetApplicationVersionAction implements GetApplicationVersionActionInterface
+final class GetApplicationVersionAction implements GetApplicationVersionActionInterface
 {
     private const DEFAULT_VERSION = 'dev';
 

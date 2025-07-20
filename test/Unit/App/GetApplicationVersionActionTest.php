@@ -27,18 +27,22 @@ declare(strict_types=1);
  * SOFTWARE.
  */
 
-\chdir(\dirname(__DIR__));
-\ini_set('memory_limit', '512M');
-\error_reporting(E_ALL);
+namespace Rah\TextileCli\Test\Unit\App;
 
-\set_error_handler(static function (int $severity, string $message, string $filename, int $line) {
-    throw new \ErrorException(
-        $message,
-        0,
-        $severity,
-        $filename,
-        $line
-    );
-});
+use PHPUnit\Framework\TestCase;
+use Rah\TextileCli\App\GetApplicationVersionAction;
 
-require \dirname(__DIR__) . '/vendor/autoload.php';
+final class GetApplicationVersionActionTest extends TestCase
+{
+    private GetApplicationVersionAction $action;
+
+    protected function setUp(): void
+    {
+        $this->action = new GetApplicationVersionAction();
+    }
+
+    public function testExecute(): void
+    {
+        $this->assertIsString($this->action->execute());
+    }
+}

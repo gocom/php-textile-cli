@@ -40,6 +40,9 @@
 
 $root = \dirname(__DIR__);
 
+$composer = \json_decode(file_get_contents($root . '/composer.json'), true);
+$composer['version'] = \getenv('VERSION') ?: 'dev';
+
 $build = $root . \DIRECTORY_SEPARATOR . 'build';
 
 $file = $build . \DIRECTORY_SEPARATOR . 'textile.phar';
@@ -78,6 +81,6 @@ $phar->buildFromDirectory($root, '#^'.\preg_quote($root, '#').'/(src/|vendor/)#'
 
 $phar->addFromString('/bin/textile', $bin);
 
-$phar->addFromString('VERSION', \getenv('VERSION') ?: 'dev');
+$phar->addFromString('composer.json', \json_encode($composer, JSON_PRETTY_PRINT));
 
 $phar->setStub($stub);

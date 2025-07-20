@@ -29,10 +29,14 @@ declare(strict_types=1);
 
 namespace Rah\TextileCli;
 
-\set_error_handler(static function ($errno, $errstr, $errfile, $errline) {
-    \fwrite(\STDERR, "$errno: $errstr in $errfile on line $errline\n");
-
-    exit(1);
+\set_error_handler(static function (int $severity, string $message, string $filename, int $line) {
+    throw new \ErrorException(
+        $message,
+        0,
+        $severity,
+        $filename,
+        $line
+    );
 });
 
 require dirname(__DIR__) . '/vendor/autoload.php';

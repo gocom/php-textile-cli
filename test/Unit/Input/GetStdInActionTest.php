@@ -27,14 +27,37 @@ declare(strict_types=1);
  * SOFTWARE.
  */
 
-namespace Rah\TextileCli\Test\Unit;
+namespace Rah\TextileCli\Test\Unit\Input;
 
 use PHPUnit\Framework\TestCase;
+use Rah\TextileCli\Input\GetStdInAction;
 
-final class CompilePluginTest extends TestCase
+final class GetStdInActionTest extends TestCase
 {
-    public function testPlaceholder(): void
+    private GetStdInAction $action;
+
+    protected function setUp(): void
     {
-        $this->assertEquals('Test', 'Test');
+        $this->action = new GetStdInAction();
+    }
+
+    public function testExecuteDefault(): void
+    {
+        $this->assertNull($this->action->execute());
+    }
+
+    public function testExecute(): void
+    {
+        $expected = "Line1\nLine2\n";
+
+        /** @var resource $stream */
+        $stream = fopen('php://temp', 'w+');
+
+        fputs($stream, "Line1\n");
+        fputs($stream, "Line2\n");
+
+        rewind($stream);
+
+        $this->assertSame($expected, $this->action->execute($stream));
     }
 }

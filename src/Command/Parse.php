@@ -220,7 +220,7 @@ EOF
         $textile = new Parser();
 
         $textile
-            ->setDocumentType($input->getOption('document-type'))
+            ->setDocumentType($input->getOption('document-type') ?? Parser::DOCTYPE_HTML5)
             ->setLite((bool) $input->getOption('lite'))
             ->setImages(!$input->getOption('disable-images'))
             ->setLinkRelationShip((string) $input->getOption('link-relationship'))
@@ -253,7 +253,7 @@ EOF
                 $html . "\n"
             );
 
-            if ($result) {
+            if ($result === false) {
                 $errorOutput->writeln(
                     \sprintf(
                         '<error>Failed to save HTML document as %s</error>',

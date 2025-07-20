@@ -55,7 +55,9 @@ class GetStdInAction implements GetStdInActionInterface
                 }
             }
 
-            return $stdin;
+            if ($stdin !== '') {
+                return $stdin;
+            }
         }
 
         return null;
