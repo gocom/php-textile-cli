@@ -6,11 +6,14 @@ on:
     - '*.*.*'
 
 jobs:
-  build:
+  release:
     name: Create Release
     runs-on: ubuntu-latest
     env:
       COMPOSER_HOME: ./.composer
+
+    permissions:
+      contents: write
 
     steps:
 
