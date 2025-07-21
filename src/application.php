@@ -31,7 +31,6 @@ namespace Rah\TextileCli;
 
 use DI\ContainerBuilder;
 use Rah\TextileCli\App\CreateApplicationAction;
-use Throwable;
 
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
