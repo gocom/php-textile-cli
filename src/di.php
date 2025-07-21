@@ -29,18 +29,25 @@ declare(strict_types=1);
 
 namespace Rah\TextileCli;
 
-use DI\ContainerBuilder;
-use Rah\TextileCli\App\CreateApplicationAction;
-use Throwable;
+use Rah\TextileCli\Api\App\ApplicationFactoryInterface;
+use Rah\TextileCli\Api\App\CommandPoolInterface;
+use Rah\TextileCli\Api\App\GetApplicationVersionActionInterface;
+use Rah\TextileCli\Api\App\RegisterErrorHandlerActionInterface;
+use Rah\TextileCli\Api\Input\GetStdInActionInterface;
+use Rah\TextileCli\Api\Parser\ParserFactoryInterface;
+use Rah\TextileCli\App\ApplicationFactory;
+use Rah\TextileCli\App\CommandPool;
+use Rah\TextileCli\App\GetApplicationVersionAction;
+use Rah\TextileCli\App\RegisterErrorHandlerAction;
+use Rah\TextileCli\Input\GetStdInAction;
+use Rah\TextileCli\Parser\ParserFactory;
+use function DI\get;
 
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
-
-require dirname(__DIR__) . '/vendor/autoload.php';
-
-$builder = new ContainerBuilder();
-$builder->addDefinitions(__DIR__ . '/di.php');
-$container = $builder->build();
-
-$container->get(CreateApplicationAction::class)
-    ->execute()
-    ->run();
+return [
+    ApplicationFactoryInterface::class => get(ApplicationFactory::class),
+    CommandPoolInterface::class => get(CommandPool::class),
+    GetApplicationVersionActionInterface::class => get(GetApplicationVersionAction::class),
+    GetStdInActionInterface::class => get(GetStdInAction::class),
+    ParserFactoryInterface::class => get(ParserFactory::class),
+    RegisterErrorHandlerActionInterface::class => get(RegisterErrorHandlerAction::class),
+];

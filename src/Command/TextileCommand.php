@@ -30,7 +30,8 @@ declare(strict_types=1);
 namespace Rah\TextileCli\Command;
 
 use Netcarver\Textile\Parser;
-use Rah\TextileCli\Input\GetStdInAction;
+use Rah\TextileCli\Api\Input\GetStdInActionInterface;
+use Rah\TextileCli\Api\Parser\ParserFactoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -44,8 +45,33 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * Compiles Textile documents into HTML.
  */
-final class Textile extends Command
+final class TextileCommand extends Command
 {
+    private const OPTION_DOCUMENT_TYPE = 'document-type';
+    private const OPTION_DOCUMENT_ROOT_DIRECTORY = 'document-root-directory';
+    private const OPTION_LITE = 'lite';
+    private const OPTION_NO_IMAGES = 'no-images';
+    private const OPTION_LINK_RELATIONSHIP = 'link-relationship';
+    private const OPTION_RESTRICTED = 'restricted';
+    private const OPTION_RAW_BLOCKS = 'raw-blocks';
+    private const OPTION_ALIGN_CLASSES = 'align-classes';
+    private const OPTION_NO_ALIGN_CLASSES = 'no-align-classes';
+    private const OPTION_NO_BLOCK_TAGS = 'no-block-tags';
+    private const OPTION_NO_LINE_WRAP = 'no-line-wrap';
+    private const OPTION_IMAGE_PREFIX = 'image-prefix';
+    private const OPTION_LINK_PREFIX = 'link-prefix';
+    private const OPTION_NO_DIMENSIONS = 'no-dimensions';
+    private const OPTION_OUTPUT = 'output';
+    private const ARGUMENT_FILE = 'file';
+
+    public function __construct(
+        private readonly ParserFactoryInterface $parserFactory,
+        private readonly GetStdInActionInterface $getStdInAction,
+        ?string $name = null
+    ) {
+        parent::__construct($name);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -55,7 +81,7 @@ final class Textile extends Command
             ->setName('textile')
             ->setDefinition([
                 new InputOption(
-                    'document-type',
+                    self::OPTION_DOCUMENT_TYPE,
                     't',
                     InputOption::VALUE_REQUIRED,
                     'Set the document type',
@@ -67,7 +93,7 @@ final class Textile extends Command
                 ),
 
                 new InputOption(
-                    'document-root-directory',
+                    self::OPTION_DOCUMENT_ROOT_DIRECTORY,
                     'd',
                     InputOption::VALUE_REQUIRED,
                     'Set the document root directory',
@@ -75,21 +101,21 @@ final class Textile extends Command
                 ),
 
                 new InputOption(
-                    'lite',
+                    self::OPTION_LITE,
                     'l',
                     InputOption::VALUE_NONE,
                     'Enable lite mode'
                 ),
 
                 new InputOption(
-                    'no-images',
+                    self::OPTION_NO_IMAGES,
                     'i',
                     InputOption::VALUE_NONE,
                     'Disable images'
                 ),
 
                 new InputOption(
-                    'link-relationship',
+                    self::OPTION_LINK_RELATIONSHIP,
                     'L',
                     InputOption::VALUE_REQUIRED,
                     'Set link relationship',
@@ -98,77 +124,77 @@ final class Textile extends Command
                 ),
 
                 new InputOption(
-                    'restricted',
+                    self::OPTION_RESTRICTED,
                     'r',
                     InputOption::VALUE_NONE,
                     'Enable restricted mode'
                 ),
 
                 new InputOption(
-                    'raw-blocks',
+                    self::OPTION_RAW_BLOCKS,
                     'U',
                     InputOption::VALUE_NONE,
-                    'Enable raw HTML blocks'
+                    'Enable raw blocks'
                 ),
 
                 new InputOption(
-                    'align-classes',
+                    self::OPTION_ALIGN_CLASSES,
                     'A',
                     InputOption::VALUE_NONE,
                     'Enable alignment classes'
                 ),
 
                 new InputOption(
-                    'no-align-classes',
+                    self::OPTION_NO_ALIGN_CLASSES,
                     'a',
                     InputOption::VALUE_NONE,
                     'Disable alignment classes'
                 ),
 
                 new InputOption(
-                    'no-block-tags',
+                    self::OPTION_NO_BLOCK_TAGS,
                     'b',
                     InputOption::VALUE_NONE,
                     'Disable block tags'
                 ),
 
                 new InputOption(
-                    'no-line-wrap',
+                    self::OPTION_NO_LINE_WRAP,
                     'w',
                     InputOption::VALUE_NONE,
                     'Disable line wrapping'
                 ),
 
                 new InputOption(
-                    'image-prefix',
+                    self::OPTION_IMAGE_PREFIX,
                     'p',
                     InputOption::VALUE_REQUIRED,
                     'Set image URL prefix'
                 ),
 
                 new InputOption(
-                    'link-prefix',
+                    self::OPTION_LINK_PREFIX,
                     'P',
                     InputOption::VALUE_REQUIRED,
                     'Set link URL prefix'
                 ),
 
                 new InputOption(
-                    'no-dimensions',
+                    self::OPTION_NO_DIMENSIONS,
                     'z',
                     InputOption::VALUE_NONE,
                     'Disable adding width and height to images'
                 ),
 
                 new InputOption(
-                    'output',
+                    self::OPTION_OUTPUT,
                     'o',
                     InputOption::VALUE_REQUIRED,
                     'Save output HTML as the specified file'
                 ),
 
                 new InputArgument(
-                    'file',
+                    self::ARGUMENT_FILE,
                     InputArgument::OPTIONAL,
                     'Textile document to parse and compile'
                 ),
@@ -191,7 +217,7 @@ EOF
             ? $output->getErrorOutput()
             : $output;
 
-        $inputFile = $input->getArgument('file');
+        $inputFile = $input->getArgument(self::ARGUMENT_FILE);
 
         if ($inputFile) {
             if (!\file_exists($inputFile) || !\is_readable($inputFile)) {
@@ -208,7 +234,7 @@ EOF
                 ? $input->getStream()
                 : null;
 
-            $document = (new GetStdInAction())->execute($inputSteam);
+            $document = $this->getStdInAction->execute($inputSteam);
         }
 
         if (!$document) {
@@ -219,35 +245,35 @@ EOF
             return Command::FAILURE;
         }
 
-        $textile = new Parser();
+        $parser = $this->parserFactory->create();
 
-        $textile
-            ->setDocumentType($input->getOption('document-type') ?? Parser::DOCTYPE_HTML5)
-            ->setLite((bool) $input->getOption('lite'))
-            ->setImages(!$input->getOption('no-images'))
-            ->setLinkRelationShip((string) $input->getOption('link-relationship'))
-            ->setRestricted((bool) $input->getOption('restricted'))
-            ->setRawBlocks((bool) $input->getOption('raw-blocks'))
-            ->setBlockTags(!$input->getOption('no-block-tags'))
-            ->setLineWrap(!$input->getOption('no-line-wrap'))
-            ->setImagePrefix((string) $input->getOption('image-prefix'))
-            ->setLinkPrefix((string) $input->getOption('link-prefix'))
-            ->setDimensionlessImages((bool) $input->getOption('no-dimensions'));
+        $parser
+            ->setDocumentType($input->getOption(self::OPTION_DOCUMENT_TYPE) ?? Parser::DOCTYPE_HTML5)
+            ->setLite((bool) $input->getOption(self::OPTION_LITE))
+            ->setImages(!$input->getOption(self::OPTION_NO_IMAGES))
+            ->setLinkRelationShip((string) $input->getOption(self::OPTION_LINK_RELATIONSHIP))
+            ->setRestricted((bool) $input->getOption(self::OPTION_RESTRICTED))
+            ->setRawBlocks((bool) $input->getOption(self::OPTION_RAW_BLOCKS))
+            ->setBlockTags(!$input->getOption(self::OPTION_NO_BLOCK_TAGS))
+            ->setLineWrap(!$input->getOption(self::OPTION_NO_LINE_WRAP))
+            ->setImagePrefix((string) $input->getOption(self::OPTION_IMAGE_PREFIX))
+            ->setLinkPrefix((string) $input->getOption(self::OPTION_LINK_PREFIX))
+            ->setDimensionlessImages((bool) $input->getOption(self::OPTION_NO_DIMENSIONS));
 
-        if ($input->getOption('document-root-directory')) {
-            $textile->setDocumentRootDirectory($input->getOption('document-root-directory'));
+        if ($input->getOption(self::OPTION_DOCUMENT_ROOT_DIRECTORY)) {
+            $parser->setDocumentRootDirectory($input->getOption(self::OPTION_DOCUMENT_ROOT_DIRECTORY));
         }
 
-        if ($input->getOption('align-classes')) {
-            $textile->setAlignClasses(true);
+        if ($input->getOption(self::OPTION_ALIGN_CLASSES)) {
+            $parser->setAlignClasses(true);
         }
 
-        if ($input->getOption('no-align-classes')) {
-            $textile->setAlignClasses(false);
+        if ($input->getOption(self::OPTION_NO_ALIGN_CLASSES)) {
+            $parser->setAlignClasses(false);
         }
 
-        $html = $textile->parse($document);
-        $saveAs = $input->getOption('output');
+        $html = $parser->parse($document);
+        $saveAs = $input->getOption(self::OPTION_OUTPUT);
 
         if ($saveAs) {
             $result = \file_put_contents(

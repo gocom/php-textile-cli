@@ -30,18 +30,31 @@ declare(strict_types=1);
 namespace Rah\TextileCli\Test\Unit\Command;
 
 use ErrorException;
+use Netcarver\Textile\Parser;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Rah\TextileCli\Command\Textile;
+use Rah\TextileCli\Api\Input\GetStdInActionInterface;
+use Rah\TextileCli\Api\Parser\ParserFactoryInterface;
+use Rah\TextileCli\Command\TextileCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\StreamableInputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class TextileTest extends TestCase
+final class TextileCommandTest extends TestCase
 {
-    private Textile $command;
+    private TextileCommand $command;
+
+    /**
+     * @var ParserFactoryInterface&MockObject
+     */
+    private $parserFactory;
+
+    /**
+     * @var GetStdInActionInterface&MockObject
+     */
+    private $getStdInAction;
 
     /**
      * @var MockObject&InputInterface
@@ -53,8 +66,21 @@ final class TextileTest extends TestCase
      */
     private $output;
 
+    /**
+     * @var MockObject&Parser
+     */
+    private $parser;
+
     protected function setUp(): void
     {
+        $this->parserFactory = $this
+            ->getMockBuilder(ParserFactoryInterface::class)
+            ->getMock();
+
+        $this->getStdInAction = $this
+            ->getMockBuilder(GetStdInActionInterface::class)
+            ->getMock();
+
         $this->input = $this
             ->getMockBuilder(InputInterface::class)
             ->getMock();
@@ -63,10 +89,83 @@ final class TextileTest extends TestCase
             ->getMockBuilder(OutputInterface::class)
             ->getMock();
 
-        $this->command = new Textile();
+        $this->parser = $this
+            ->getMockBuilder(Parser::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->parserFactory
+            ->expects($this->atMost(1))
+            ->method('create')
+            ->willReturn($this->parser);
+
+        $this->parser
+            ->expects($this->atMost(1))
+            ->method('setDocumentType')
+            ->willReturnSelf();
+
+        $this->parser
+            ->expects($this->atMost(1))
+            ->method('setLite')
+            ->willReturnSelf();
+
+        $this->parser
+            ->expects($this->atMost(1))
+            ->method('setImages')
+            ->willReturnSelf();
+
+        $this->parser
+            ->expects($this->atMost(1))
+            ->method('setLinkRelationShip')
+            ->willReturnSelf();
+
+        $this->parser
+            ->expects($this->atMost(1))
+            ->method('setRestricted')
+            ->willReturnSelf();
+
+        $this->parser
+            ->expects($this->atMost(1))
+            ->method('setRawBlocks')
+            ->willReturnSelf();
+
+        $this->parser
+            ->expects($this->atMost(1))
+            ->method('setBlockTags')
+            ->willReturnSelf();
+
+        $this->parser
+            ->expects($this->atMost(1))
+            ->method('setLineWrap')
+            ->willReturnSelf();
+
+        $this->parser
+            ->expects($this->atMost(1))
+            ->method('setImagePrefix')
+            ->willReturnSelf();
+
+        $this->parser
+            ->expects($this->atMost(1))
+            ->method('setLinkPrefix')
+            ->willReturnSelf();
+
+        $this->parser
+            ->expects($this->atMost(1))
+            ->method('setDimensionlessImages')
+            ->willReturnSelf();
+
+        $this->parser
+            ->expects($this->atMost(1))
+            ->method('parse')
+            ->willReturn('');
+
+        $this->command = new TextileCommand(
+            $this->parserFactory,
+            $this->getStdInAction
+        );
     }
 
-    public function testExecute(): void
+    public function testExecuteMissingInput(): void
     {
         $this->assertSame(
             Command::FAILURE,

@@ -27,20 +27,26 @@ declare(strict_types=1);
  * SOFTWARE.
  */
 
-namespace Rah\TextileCli;
+namespace Rah\TextileCli\Test\Unit\App;
 
-use DI\ContainerBuilder;
-use Rah\TextileCli\App\CreateApplicationAction;
-use Throwable;
+use PHPUnit\Framework\TestCase;
+use Rah\TextileCli\App\ApplicationFactory;
+use Symfony\Component\Console\Application;
 
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
+final class ApplicationFactoryTest extends TestCase
+{
+    private ApplicationFactory $factory;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+    protected function setUp(): void
+    {
+        $this->factory = new ApplicationFactory();
+    }
 
-$builder = new ContainerBuilder();
-$builder->addDefinitions(__DIR__ . '/di.php');
-$container = $builder->build();
-
-$container->get(CreateApplicationAction::class)
-    ->execute()
-    ->run();
+    public function testExecute(): void
+    {
+        $this->assertInstanceOf(
+            Application::class,
+            $this->factory->create('Name', '0.0.0')
+        );
+    }
+}

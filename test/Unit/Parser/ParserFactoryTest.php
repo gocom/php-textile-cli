@@ -27,20 +27,26 @@ declare(strict_types=1);
  * SOFTWARE.
  */
 
-namespace Rah\TextileCli;
+namespace Rah\TextileCli\Test\Unit\Parser;
 
-use DI\ContainerBuilder;
-use Rah\TextileCli\App\CreateApplicationAction;
-use Throwable;
+use Netcarver\Textile\Parser;
+use PHPUnit\Framework\TestCase;
+use Rah\TextileCli\Parser\ParserFactory;
 
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
+final class ParserFactoryTest extends TestCase
+{
+    private ParserFactory $factory;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+    protected function setUp(): void
+    {
+        $this->factory = new ParserFactory();
+    }
 
-$builder = new ContainerBuilder();
-$builder->addDefinitions(__DIR__ . '/di.php');
-$container = $builder->build();
-
-$container->get(CreateApplicationAction::class)
-    ->execute()
-    ->run();
+    public function testCreate(): void
+    {
+        $this->assertInstanceOf(
+            Parser::class,
+            $this->factory->create()
+        );
+    }
+}

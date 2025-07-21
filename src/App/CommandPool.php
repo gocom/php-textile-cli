@@ -27,20 +27,30 @@ declare(strict_types=1);
  * SOFTWARE.
  */
 
-namespace Rah\TextileCli;
+namespace Rah\TextileCli\App;
 
-use DI\ContainerBuilder;
-use Rah\TextileCli\App\CreateApplicationAction;
-use Throwable;
+use Rah\TextileCli\Api\App\CommandPoolInterface;
+use Rah\TextileCli\Command\TextileCommand;
 
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
+/**
+ * Command pool.
+ *
+ * @codeCoverageIgnore
+ */
+final class CommandPool implements CommandPoolInterface
+{
+    public function __construct(
+        private readonly TextileCommand $textileCommand
+    ) {
+    }
 
-require dirname(__DIR__) . '/vendor/autoload.php';
-
-$builder = new ContainerBuilder();
-$builder->addDefinitions(__DIR__ . '/di.php');
-$container = $builder->build();
-
-$container->get(CreateApplicationAction::class)
-    ->execute()
-    ->run();
+    /**
+     * {@inheritDoc}
+     */
+    public function getCommands(): array
+    {
+        return [
+            $this->textileCommand,
+        ];
+    }
+}

@@ -49,7 +49,7 @@ _arguments -A '-*' \
     '(-i --no-images)'{-i,--no-images}'[Disable images]' \
     '(-L --link-relationship=)'{-L,--link-relationship=}'[Set link relationship]: :->link_relationships' \
     '(-r --restricted)'{-r,--restricted}'[Enable restricted mode]' \
-    '(-U --raw-blocks)'{-U,--raw-blocks}'[Enable raw HTML blocks]' \
+    '(-U --raw-blocks)'{-U,--raw-blocks}'[Enable raw blocks]' \
     '(-A --align-classes)'{-A,--align-classes}'[Enable alignment classes]' \
     '(-a --no-align-classes)'{-a,--no-align-classes}'[Disable alignment classes]' \
     '(-b --no-block-tags)'{-b,--no-block-tags}'[Disable block tags]' \

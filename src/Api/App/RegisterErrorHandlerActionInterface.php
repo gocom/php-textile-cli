@@ -27,20 +27,15 @@ declare(strict_types=1);
  * SOFTWARE.
  */
 
-namespace Rah\TextileCli;
+namespace Rah\TextileCli\Api\App;
 
-use DI\ContainerBuilder;
-use Rah\TextileCli\App\CreateApplicationAction;
-use Throwable;
-
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
-
-require dirname(__DIR__) . '/vendor/autoload.php';
-
-$builder = new ContainerBuilder();
-$builder->addDefinitions(__DIR__ . '/di.php');
-$container = $builder->build();
-
-$container->get(CreateApplicationAction::class)
-    ->execute()
-    ->run();
+/**
+ * Register error handler action.
+ */
+interface RegisterErrorHandlerActionInterface
+{
+    /**
+     * Registers error handler that converts errors into exceptions.
+     */
+    public function execute(): void;
+}
