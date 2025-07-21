@@ -1,9 +1,7 @@
 PHP-Textile CLI
 =====
 
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=gocom_php-textile-cli&metric=coverage)](https://sonarcloud.io/dashboard?id=gocom_php-textile-cli) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gocom_php-textile-cli&metric=alert_status)](https://sonarcloud.io/dashboard?id=gocom_php-textile-cli)
-
-**Work in progress, not yet installable.**
+[![Packagist](https://img.shields.io/packagist/v/rah/php-textile-cli.svg)](https://packagist.org/packages/rah/php-textile-cli) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=gocom_php-textile-cli&metric=coverage)](https://sonarcloud.io/dashboard?id=gocom_php-textile-cli) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gocom_php-textile-cli&metric=alert_status)](https://sonarcloud.io/dashboard?id=gocom_php-textile-cli)
 
 CLI application for parsing Textile markup using [PHP-Textile](https://github.com/textile/php-textile) library, written
 in PHP. Accepts Textile markup input and converts it into well-formed HTML.
@@ -17,8 +15,8 @@ Using [Composer](https://getcomposer.org):
 $ composer require rah/php-textile-cli
 ```
 
-Or [download](https://github.com/gocom/php-textile-cli/releases/latest) a packaged textile.phar from the releases. The
-downloadable ZIP also contains man pages and shell completion definitions for bash, fish and zsh.
+Or [download](https://github.com/gocom/php-textile-cli/releases/latest) a textile.zip from the releases. The
+ZIP contains a packaged textile.phar, man pages and shell completion definitions for bash, fish and zsh.
 
 Usage
 -----
